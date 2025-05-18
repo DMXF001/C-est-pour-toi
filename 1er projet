@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Message pour toi</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    #message {
+      font-size: 2rem;
+      margin-top: 20px;
+    }
+
+    #image {
+      max-width: 80%;
+      max-height: 50vh;
+      margin-bottom: 20px;
+      display: none;
+      border-radius: 12px;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body onclick="nextPhrase()">
+  <audio id="bg-music" autoplay loop>
+    <source src="musique.mp3" type="audio/mpeg">
+    Ton navigateur ne supporte pas l’audio HTML5.
+  </audio>
+
+  <img id="image" src="photo.jpg" alt="Image spéciale">
+  <div id="message"></div>
+
+  <script>
+    const phrases = [
+      "Coucou toi...",
+      "J'avais quelque chose à te dire.",
+      "Quelque chose d'important.",
+      "Mais je préfère te le montrer en douceur.",
+      "Alors clique encore...",
+      "Et encore...",
+      "Tu es quelqu'un de vraiment spécial.",
+      "Ne l'oublie jamais.",
+      "Voici un souvenir pour toi :",
+      "photo",
+      "J’espère que ça t’a plu.",
+      "À très vite !"
+    ];
+
+    let index = 0;
+    const messageEl = document.getElementById("message");
+    const imageEl = document.getElementById("image");
+    const music = document.getElementById("bg-music");
+
+    function typeText(text, i = 0) {
+      if (i < text.length) {
+        messageEl.textContent += text.charAt(i);
+        setTimeout(() => typeText(text, i + 1), 40);
+      }
+    }
+
+    function nextPhrase() {
+      if (index === 0) {
+        // Démarre la musique si nécessaire
+        music.play().catch(() => {}); // Certaines plateformes exigent un clic
+      }
+
+      if (index >= phrases.length) return;
+
+      const current = phrases[index];
+      messageEl.textContent = "";
+
+      if (current === "photo") {
+        imageEl.style.display = "block";
+      } else {
+        imageEl.style.display = "none";
+        typeText(current);
+      }
+
+      index++;
+    }
+
+    // Lancer la première phrase automatiquement
+    nextPhrase();
+  </script>
+</body>
+</html>
