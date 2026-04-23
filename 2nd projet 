@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>File d'attente</title>
+</head>
+<body>
+
+    <h1>File d'attente</h1>
+
+    <input type="text" id="nom" placeholder="Entrer un nom">
+    <button onclick="ajouter()">Ajouter</button>
+
+    <h2>Liste :</h2>
+    <ul id="liste"></ul>
+    
+    <h2>En cours :</h2>
+<p id="encours">Personne</p>
+
+<button onclick="suivant()">Suivant</button>
+
+    <script>    
+        let compteur = 1;
+        let file = [];
+        let enCours = null;
+
+        function ajouter() {
+    let nom = document.getElementById("nom").value;
+
+    if (nom === "") return;
+
+    let numero = "A" + String(compteur).padStart(3, '0');
+
+    file.push({
+        numero: numero,
+        nom: nom
+    });
+
+    compteur++;
+
+    afficher();
+
+    document.getElementById("nom").value = "";
+    sauvegarder();
+}
+        
+        function suivant() {
+    if (file.length === 0) {
+        enCours = null;
+    } else {
+        enCours = file.shift(); // enlève le premier
+    }
+
+    afficher();
+    sauvegarder();
+}
+
+        function afficher() {
+    let liste = document.getElementById("liste");
+    liste.innerHTML = "";
+
+    file.forEach(function(personne) {
+        let li = document.createElement("li");
+        li.textContent = personne.numero + " - " + personne.nom;
+        liste.appendChild(li);
+    });
+
+    let encours = document.getElementById("encours");
+
+    if (enCours === null) {
+        encours.textContent = "Personne";
+    } else {
+        encours.textContent = enCours.numero + " - " + enCours.nom;
+    }
+}
+
+   function sauvegarder() {
+    localStorage.setItem("file", JSON.stringify(file));
+    localStorage.setItem("enCours", JSON.stringify(enCours));
+    localStorage.setItem("compteur", compteur);
+}
+
+   function charger() {
+    let fileStockee = localStorage.getItem("file");
+    let enCoursStocke = localStorage.getItem("enCours");
+    let compteurStocke = localStorage.getItem("compteur");
+
+    if (fileStockee) {
+        file = JSON.parse(fileStockee);
+    }
+
+    if (enCoursStocke) {
+        enCours = JSON.parse(enCoursStocke);
+    }
+
+    if (compteurStocke) {
+        compteur = parseInt(compteurStocke);
+    }
+
+    afficher();
+}
+   charger();
+    </script>
+
+</body>
+</html>
